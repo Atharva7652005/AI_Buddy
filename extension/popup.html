@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Buddy</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="glass-panel">
+      <div class="logo-area">
+        <div class="glow-orb"></div>
+        <h1>AI Buddy</h1>
+      </div>
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="extensionToggle" checked>
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label" id="toggleLabel">ON</span>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar glass-panel">
+      <span class="status-indicator active" id="statusIndicator"></span>
+      <span id="statusText">Connected: ChatGPT</span>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content glass-panel">
+      
+      <!-- Current Session View -->
+      <section id="currentSessionView" class="view-section active">
+        <div class="section-header">
+          <h2>Current Session</h2>
+          <button id="newSessionBtn" class="btn btn-primary btn-sm">New Session</button>
+        </div>
+        
+        <div class="summary-container">
+          <h3 id="sessionTitle">Awaiting First Prompt...</h3>
+          <div id="summaryContent" class="summary-text">
+            Your cumulative summary will appear here once you interact with the AI.
+          </div>
+        </div>
+
+        <button id="openPushModalBtn" class="btn btn-accent full-width mt-10">Push Summary to AI</button>
+      </section>
+
+      <!-- History View -->
+      <section id="historyView" class="view-section" style="display: none;">
+        <div class="section-header">
+          <h2>History</h2>
+          <button id="backToCurrentBtn" class="btn btn-secondary btn-sm">Back</button>
+        </div>
+        <div class="history-list" id="historyList">
+          <!-- History items injected via JS -->
+          <div class="loading-text">Loading history...</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Navigation -->
+    <footer class="footer-nav glass-panel">
+      <button id="navCurrentBtn" class="nav-btn active">Current</button>
+      <button id="navHistoryBtn" class="nav-btn">History</button>
+    </footer>
+
+    <!-- Push Modal -->
+    <div id="pushModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content glass-panel">
+        <h3>Push to AI</h3>
+        <p>Select where you want to paste the current summary:</p>
+        <div class="target-grid">
+          <button class="target-btn" data-url="https://chatgpt.com/">ChatGPT</button>
+          <button class="target-btn" data-url="https://gemini.google.com/">Gemini</button>
+          <button class="target-btn" data-url="https://x.com/i/grok">Grok</button>
+          <button class="target-btn" data-url="https://claude.ai/">Claude</button>
+          <button class="target-btn" data-url="https://www.perplexity.ai/">Perplexity</button>
+          <button class="target-btn" data-url="https://chat.deepseek.com/">DeepSeek</button>
+        </div>
+        <button id="closeModalBtn" class="btn btn-secondary full-width mt-10">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

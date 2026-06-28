@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "AI Buddy",
+  "version": "1.0",
+  "description": "An AI Buddy that creates cumulative summaries of your AI conversations.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "*://chatgpt.com/*",
+    "*://gemini.google.com/*",
+    "*://x.com/*",
+    "*://claude.ai/*",
+    "*://www.perplexity.ai/*",
+    "*://chat.deepseek.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Buddy"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://gemini.google.com/*",
+        "*://x.com/i/grok*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}
