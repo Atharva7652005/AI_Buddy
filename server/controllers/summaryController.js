@@ -32,15 +32,23 @@ const updateSummary = async (req, res) => {
       session = new Session({ sessionId });
     }
 
+    const previousSummary = session.summary;
+    let titlePromise = null;
+
     // Generate title if it's a new/empty session
-    if (!session.summary || session.title === "New Session") {
-      session.title = await generateTitle(prompt);
+    if (!previousSummary || session.title === "New Session") {
+      titlePromise = generateTitle(prompt);
     }
 
-    const previousSummary = session.summary;
-    const newSummary = await generateCumulativeSummary(previousSummary, prompt, response);
+    const summaryPromise = generateCumulativeSummary(previousSummary, prompt, response);
 
-    session.summary = newSummary;
+    if (titlePromise) {
+      const [newTitle, newSummary] = await Promise.all([titlePromise, summaryPromise]);
+      session.title = newTitle;
+      session.summary = newSummary;
+    } else {
+      session.summary = await summaryPromise;
+    }
     await session.save();
 
     return res.status(200).json({

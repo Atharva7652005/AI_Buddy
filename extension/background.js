@@ -35,6 +35,41 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     return true; // Keep message channel open for async response
   }
+
+  if (request.action === "pasteViaBackground") {
+    const { tabId, text } = request;
+    
+    // Wait for the new tab to finish loading
+    chrome.tabs.onUpdated.addListener(function listener(tId, info) {
+      if (tId === tabId && info.status === 'complete') {
+        // Remove listener to avoid multiple fires
+        chrome.tabs.onUpdated.removeListener(listener);
+        
+        // Execute the pasting script
+        chrome.scripting.executeScript({
+          target: { tabId },
+          func: (textToPaste) => {
+            // Give the page a slight moment to initialize its JS frameworks
+            setTimeout(() => {
+              const inputBox = document.querySelector('textarea, [contenteditable="true"]');
+              if (inputBox) {
+                if (inputBox.tagName === 'TEXTAREA') {
+                  inputBox.value = textToPaste;
+                } else {
+                  inputBox.innerText = textToPaste;
+                }
+                // Trigger events so React/Vue/etc. register the change
+                inputBox.dispatchEvent(new Event('input', { bubbles: true }));
+                inputBox.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }, 1000);
+          },
+          args: [text]
+        }).catch(err => console.error("Scripting error:", err));
+      }
+    });
+    return true;
+  }
 });
 
 function sendSummaryUpdate(sessionId, prompt, responseText, sendResponse) {
